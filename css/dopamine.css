@@ -1,0 +1,8 @@
+.settlement.win{animation:cash-stamp .22s ease-out}
+.wallet b.wallet-up{color:#60d59a;text-shadow:0 0 12px #3bcf8866}
+.wallet b.wallet-down{color:#ff7067;text-shadow:0 0 12px #e35b5b55}
+.history-row.fresh{background:#1a1408;box-shadow:inset 3px 0 #f1bd52;animation:ledger-in .35s ease-out}
+.personal-best-toast.streak-toast{border-color:#bd6c28;background:linear-gradient(90deg,#361707,#211506);color:#ffbd66}
+@keyframes cash-stamp{0%{transform:scale(.92);filter:brightness(1.35)}45%{transform:scale(1.035)}100%{transform:scale(1)}}
+@keyframes ledger-in{0%{opacity:0;transform:translateY(-6px)}100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.settlement.win,.history-row.fresh{animation:none}}
