@@ -1,3 +1,4 @@
+.race-stage[hidden],.result-board[hidden],.next-race[hidden]{display:none!important}
 .ticket-close,.ticket-step,.mobile-ticket-dock,.mobile-ticket-backdrop,.mobile-ticket-spacer{display:none}
 @media(max-width:720px){
   .race-room{padding-bottom:12px}
