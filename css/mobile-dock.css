@@ -1,0 +1,27 @@
+.ticket-close,.ticket-step,.mobile-ticket-dock,.mobile-ticket-backdrop,.mobile-ticket-spacer{display:none}
+@media(max-width:720px){
+  .race-room{padding-bottom:12px}
+  .mobile-ticket-spacer{display:block;flex-shrink:0;height:var(--ticket-dock-space,168px);pointer-events:none}
+  .ticket-panel{position:fixed;z-index:72;right:8px;bottom:calc(var(--ticket-dock-space,168px) + 8px);left:8px;top:auto;max-height:min(78dvh,640px);overflow:auto;border-color:#8a682f;border-radius:14px;background:#0d0a06;box-shadow:0 -12px 55px #000e;pointer-events:none;transform:translateY(calc(100% + 18px));transition:transform .22s ease-out}
+  .ticket-panel.mobile-open{pointer-events:auto;transform:translateY(0)}
+  .mobile-ticket-dock{position:fixed;z-index:60;right:max(8px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));left:max(8px,env(safe-area-inset-left));display:grid;gap:6px;max-width:704px;margin:auto;padding:7px;border:1px solid #7a5c2c;border-radius:16px;background:#17130df5;box-shadow:0 8px 30px #000e;backdrop-filter:blur(12px)}
+  .mobile-ticket-summary{padding:8px 8px 8px 9px;border-radius:10px}
+  .mobile-ticket-pick b,.mobile-ticket-money b{font-size:10px}
+  .mobile-ticket-dock strong{padding:10px 9px;border-radius:7px}
+  .mobile-quick-controls{display:grid;gap:6px;grid-template-columns:none;margin-top:0;padding-top:0;border-top:0}
+  .mobile-straight-types{grid-column:auto;grid-template-columns:repeat(4,1fr)}
+  .mobile-straight-types button,.mobile-exotic-types button,.mobile-wager-stepper button{min-height:38px;border-radius:8px;color:#c4b79f;font-size:9px}
+  .mobile-exotic-types{grid-column:auto;border-radius:8px}
+  .mobile-pick-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:4px}
+  .mobile-pick-chip{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;min-height:42px;padding:6px 8px;border:1px dashed #6a5530;border-radius:8px;background:#0b0905;color:#cab889;text-align:left}
+  .mobile-pick-chip small,.mobile-pick-chip b{display:block;min-width:0}
+  .mobile-pick-chip small{color:#bd9550;font-size:7px;font-weight:1000;letter-spacing:.7px}
+  .mobile-pick-chip b{overflow:hidden;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+  .mobile-pick-chip.filled{border-style:solid;border-color:#c99a43;background:#221a0b;box-shadow:inset 3px 0 var(--silk,#c99a43)}
+  .mobile-pick-chip.filled span{color:#d4bb89;font-size:16px;line-height:1}
+  .mobile-pick-chip.empty{color:#8d816c}
+  .mobile-wager-row{display:grid;grid-template-columns:minmax(132px,.9fr) minmax(0,1.25fr);gap:6px;align-items:stretch}
+  .mobile-wager-stepper{grid-template-columns:38px minmax(0,1fr) 38px}
+  .mobile-wager-stepper b{height:38px;border-radius:8px;font-size:11px}
+  .mobile-place-bet{min-height:38px;border-radius:8px;font-size:10px}
+}
