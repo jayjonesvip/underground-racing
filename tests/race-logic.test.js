@@ -152,8 +152,8 @@ test('mobile wagering keeps a live ticket dock and expandable review sheet',()=>
   assert.match(script,/function toggleMobileMore\(\)/);
   assert.match(script,/chooseBetType\(button\.dataset\.mobileBetType,true\)/);
   assert.match(script,/mobilePlaceBet.*placeBet/);
-  assert.match(script,/atb:\{label:'I CALL'/);
-  assert.match(html,/>I CALL<\/button>/);
+  assert.match(script,/atb:\{label:'BOX'/);
+  assert.match(html,/>BOX<\/button>/);
   assert.match(css,/@media\(max-width:720px\)/);
   assert.match(css,/\.mobile-ticket-dock/);
   assert.match(css,/\.ticket-panel\.mobile-open/);
