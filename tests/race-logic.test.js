@@ -27,7 +27,7 @@ test('Equibase-derived generator ranges remain explicit and bounded',()=>{
 test('jockey roster reuses the American and Latin Cage Grind name pools',()=>{
   const source=fs.readFileSync(require.resolve('../js/game.js'),'utf8');
   for(const name of ['Rafael Garcia','Santiago Morales','Adrian Rivera','Randy Jones','Marcus Davis'])assert.match(source,new RegExp(name));
-  assert.match(source,/jockey:jockeys\[\(index\*7\)%jockeys\.length\]/);
+  assert.match(source,/jockey:jockeys\[Math\.floor\(random\(\)\*jockeys\.length\)\]/);
 });
 
 test('track conditions change the rating of specialists',()=>{
@@ -64,4 +64,24 @@ test('race finish returns each horse exactly once',()=>{
   const race=logic.buildRace(horses,conditions,42),order=logic.finishRace(race.field,race.condition,[.1,.2,.3,.4,.5,.6]);
   assert.equal(order.length,6);
   assert.equal(new Set(order).size,6);
+});
+
+test('five virtual world rounds give every horse five real results',()=>{
+  const world=Array.from({length:200},(_,index)=>({id:`world-${index}`,name:`World Horse ${index}`,speed:4+index%7,stamina:4+(index*3)%7,break:4+(index*5)%7,consistency:4+(index*2)%7,speedFigure:55+index%50,classRating:60+index%45,earlyPace:50+index%60,latePace:50+(index*2)%60,weight:110+index%17,starts:0,wins:0,places:0,shows:0,earnings:0,topSpeedFigure:0,wetStarts:0,wetWins:0,form:[],recentRaces:[],conditionBias:{fast:index%3,muddy:(index+1)%3}}));
+  const seeded=logic.seedWorld(world,conditions,98765,5),repeat=logic.seedWorld(world,conditions,98765,5);
+  assert.deepEqual(seeded,repeat);
+  assert.equal(seeded.length,200);
+  for(const horse of seeded){
+    assert.equal(horse.starts,5);
+    assert.equal(horse.form.length,5);
+    assert.equal(horse.recentRaces.length,5);
+    assert.equal(horse.wins+horse.places+horse.shows<=horse.starts,true);
+    assert.equal(horse.earningsPerStart,Math.round(horse.earnings/horse.starts));
+  }
+});
+
+test('a world round leaves featured runners alone while every other horse races once',()=>{
+  const world=Array.from({length:24},(_,index)=>({id:`circuit-${index}`,name:`Circuit Horse ${index}`,speed:7,stamina:7,break:7,consistency:7,starts:5,form:[1,2,3,4,5],conditionBias:{fast:1,muddy:0}})),excluded=world.slice(0,6).map(horse=>horse.id);
+  const advanced=logic.simulateWorldRound(world,conditions,456,{excludeIds:excluded,raceIdPrefix:'DAY'});
+  for(const horse of advanced)assert.equal(horse.starts,excluded.includes(horse.id)?5:6);
 });

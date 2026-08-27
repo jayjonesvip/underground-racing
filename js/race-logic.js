@@ -43,6 +43,41 @@
     }).sort((a,b)=>b.score-a.score).map(result=>result.id);
   }
 
+  function applyRaceResult(horses,field,condition,finishOrder,raceId,purse=30000){
+    const entries=new Map((field||[]).map(horse=>[horse.id,horse])),positions=new Map((finishOrder||[]).map((id,index)=>[id,index+1])),fieldSize=finishOrder.length,purseShares=[.6,.2,.1,.05];
+    return (horses||[]).map(horse=>{
+      const entry=entries.get(horse.id),finish=positions.get(horse.id);
+      if(!entry||!finish)return horse;
+      const performanceFigure=Math.round(clamp((Number(entry.rating)||horseRating(entry,condition))+17-finish*2,PERFORMANCE_RANGES.speedFigure[0],PERFORMANCE_RANGES.speedFigure[1]));
+      const earned=Math.round(Math.max(0,Number(purse)||0)*(purseShares[finish-1]||0));
+      const recentRace={raceId:String(raceId),finish,fieldSize,condition:condition.id,distance:condition.distance||'',classRating:condition.raceClass||0,speedFigure:performanceFigure};
+      const recentRaces=[recentRace,...(Array.isArray(horse.recentRaces)?horse.recentRaces:[])].slice(0,5),starts=(Number(horse.starts)||0)+1,earnings=(Number(horse.earnings)||0)+earned,wet=condition.id==='muddy'||condition.id==='sloppy';
+      return {...horse,starts,wins:(Number(horse.wins)||0)+(finish===1?1:0),places:(Number(horse.places)||0)+(finish===2?1:0),shows:(Number(horse.shows)||0)+(finish===3?1:0),earnings,earningsPerStart:Math.round(earnings/starts),speedFigure:performanceFigure,topSpeedFigure:Math.max(Number(horse.topSpeedFigure)||0,performanceFigure),form:recentRaces.map(result=>result.finish),recentRaces,wetStarts:(Number(horse.wetStarts)||0)+(wet?1:0),wetWins:(Number(horse.wetWins)||0)+(wet&&finish===1?1:0)};
+    });
+  }
+
+  function balancedFields(horses,maxFieldSize=8){
+    if(!horses.length)return [];
+    const fieldCount=Math.ceil(horses.length/Math.max(3,maxFieldSize)),fields=Array.from({length:fieldCount},()=>[]);
+    horses.forEach((horse,index)=>fields[index%fieldCount].push(horse));
+    return fields.filter(field=>field.length>=3);
+  }
+
+  function simulateWorldRound(horses,conditions,seed,options={}){
+    const excluded=new Set(options.excludeIds||[]),random=seededRandom(seed),eligible=shuffle((horses||[]).filter(horse=>!excluded.has(horse.id)),random),groups=balancedFields(eligible,options.fieldSize||8);let roster=(horses||[]).slice();
+    groups.forEach((group,index)=>{
+      const raceSeed=hashSeed(`${seed}|virtual|${index}`),race=buildRace(group,conditions,raceSeed,group.length),rollRandom=seededRandom(hashSeed(`${raceSeed}|finish`)),rolls=race.field.map(()=>rollRandom()),order=finishRace(race.field,race.condition,rolls),raceId=options.raceIdPrefix?`${options.raceIdPrefix}-${index+1}`:`V-${seed}-${index+1}`;
+      roster=applyRaceResult(roster,race.field,race.condition,order,raceId,options.purse||30000);
+    });
+    return roster;
+  }
+
+  function seedWorld(horses,conditions,seed,rounds=5){
+    let roster=(horses||[]).slice();
+    for(let round=0;round<Math.max(0,whole(rounds));round++)roster=simulateWorldRound(roster,conditions,hashSeed(`${seed}|seed-round|${round}`),{raceIdPrefix:`H${round+1}`});
+    return roster;
+  }
+
   function ticketCost(type,stake){
     const amount=Math.max(0,whole(stake));
     return amount*({atb:3,exactaBox:2}[type]||1);
@@ -71,5 +106,5 @@
     return {won:payout>0,payout,profit:payout-ticket.cost,first,second,third};
   }
 
-  return {PERFORMANCE_RANGES,clamp,hashSeed,seededRandom,conditionFit,horseRating,buildRace,finishRace,ticketCost,validateTicket,settleTicket};
+  return {PERFORMANCE_RANGES,clamp,hashSeed,seededRandom,conditionFit,horseRating,buildRace,finishRace,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,validateTicket,settleTicket};
 });

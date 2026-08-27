@@ -6,7 +6,9 @@ A mobile-first fictional horse-racing wagering game spun out of Cage Grind's Und
 
 Choose Betty, Bruce, or Carl, study each race's form and track fit, build a ticket, and grow a fictional-credit wallet. Track conditions change the value of speed, stamina, consistency, and each horse's surface preference.
 
-The rotating roster contains 36 fictional horses. Each record keeps age/sex, trainer, jockey, assigned weight, starts and in-the-money record, earnings per start, recent finishes, current and top speed figures, class rating, early and late pace, workout time/rank, preferred distance and surface, equipment, medication notation, wet-track record, and a recent trip comment. The mobile program promotes the most actionable portion of that data.
+The persistent circuit contains 200 fictional horses. Each horse is generated once and stored in the player's local save. Five complete virtual racing days are simulated when the world is created, so every horse begins with five actual results rather than fabricated form numbers. Each visible race updates its six runners while the other 194 horses compete in virtual races, giving every horse one new start per world day and retaining a rolling last five.
+
+Each record keeps age/sex, trainer, jockey, assigned weight, starts and in-the-money record, actual simulated earnings per start, last-five finishes, current and top speed figures, class rating, early and late pace, workout time/rank, preferred distance and surface, equipment, medication notation, wet-track record, and recent race details. The mobile program promotes the most actionable portion of that data.
 
 Jockeys use conventional full names drawn from Cage Grind's American and Latin fighter-name pools, with the roster intentionally weighted toward Spanish-language names.
 
