@@ -66,7 +66,8 @@
       return {id:horse.id,score:raceDayRating+late+paceEffect+noise+eventEffect,story,paceScenario,eventEffect:Number(eventEffect.toFixed(2))};
     }).sort((a,b)=>b.score-a.score);
     const winnerStory=({'caught in a hot pace':'overcame a hot pace','left too much to do':'unleashed a strong late kick','stumbled at the break':'recovered after a poor break','lost ground in traffic':'recovered from traffic'})[details[0]?.story]||details[0]?.story||'ran to form';
-    return {seed:seed>>>0,order:details.map(result=>result.id),details,paceScenario,winnerStory};
+    const finishMargin=Math.max(0,(Number(details[0]?.score)||0)-(Number(details[1]?.score)||0));
+    return {seed:seed>>>0,order:details.map(result=>result.id),details,paceScenario,winnerStory,finishMargin:Number(finishMargin.toFixed(3))};
   }
 
   function estimateWinProbabilities(field,condition,seed,trials=2000){
@@ -133,6 +134,11 @@
     return [];
   }
 
+  function updateRewardState(player,result){
+    const previousBest=Math.max(0,whole(player?.personalBestPayout)),payout=Math.max(0,whole(result?.payout)),won=!!result?.won,newPersonalBest=won&&payout>previousBest;
+    return {winStreak:won?Math.max(0,whole(player?.winStreak))+1:0,personalBestPayout:newPersonalBest?payout:previousBest,newPersonalBest};
+  }
+
   function validateTicket({type,stake,picks,wallet,field}){
     const validTypes=['win','place','show','atb','exacta','exactaBox'],amount=whole(stake),ids=new Set((field||[]).map(horse=>horse.id)),chosen=Array.isArray(picks)?picks.filter(id=>ids.has(id)):[];
     if(!validTypes.includes(type))return {ok:false,reason:'Choose a wager type.'};
@@ -156,5 +162,5 @@
     return {won:payout>0,payout,profit:payout-ticket.cost,first,second,third};
   }
 
-  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,selectCompetitiveField,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,projectTicketReturns,validateTicket,settleTicket};
+  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,selectCompetitiveField,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,projectTicketReturns,updateRewardState,validateTicket,settleTicket};
 });

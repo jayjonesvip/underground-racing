@@ -29,7 +29,7 @@ The first playable wagering menu includes:
 
 The wagering window previews the exact projected return and net result before a ticket is placed. Across the Board tickets show separate first-, second-, and third-place outcomes.
 
-Race presentation includes a synthesized starting bell, low track rumble and hoof texture, distinct win/loss cues, cyan highlighting for every horse covered by the ticket, and an official-result modal. Each player has neutral, happy-win, and mad-loss portraits that react when the ticket settles. Sounds require no downloaded audio assets and can be disabled with the persistent Sound toggle.
+Race presentation includes a synthesized starting bell, low track rumble and hoof texture, distinct win/loss cues, cyan highlighting for every horse covered by the ticket, and an official-result modal. Ticket selections snap into the bet slip, payout credits count into the wallet, close score margins trigger a photo-finish hold, and 20/1-equivalent wins receive a brief flash and shake. Consecutive winning tickets build a saved streak, record payouts earn a personal-best banner, and deterministic odds-bracket copy changes the result call for favorites, mid-range scores, and long shots. Each player also has neutral, happy-win, and mad-loss portraits that react when the ticket settles. Sounds require no downloaded audio assets and can be disabled with the persistent Sound toggle.
 
 The ticket follows the beginner-friendly window sequence described by the [Churchill Downs Beginner's Guide](https://www.churchilldowns.com/wager/beginners-guide/): track, race, base amount, wager type, and program number. This is an entertainment game only; credits have no monetary value and no real-money wagering is offered.
 

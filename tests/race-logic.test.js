@@ -153,6 +153,37 @@ test('a committed race seed always resolves to the same result',()=>{
   assert.equal(first.order.length,6);
   assert.equal(new Set(first.order).size,6);
   assert.ok(['hot','slow','honest'].includes(first.paceScenario));
+  assert.equal(first.finishMargin,Number((first.details[0].score-first.details[1].score).toFixed(3)));
+});
+
+test('seeded results expose real close-finish margins for photo decisions',()=>{
+  const race=logic.buildRace(horses,conditions,24680);let photo=null;
+  for(let seed=1;seed<=500&&!photo;seed++){const result=logic.resolveRace(race.field,race.condition,seed);if(result.finishMargin<=.75)photo=result}
+  assert.ok(photo);
+  assert.ok(photo.finishMargin>=0&&photo.finishMargin<=.75);
+});
+
+test('reward state increments streaks, resets losses, and preserves personal bests',()=>{
+  const first=logic.updateRewardState({winStreak:0,personalBestPayout:0},{won:true,payout:18});
+  assert.deepEqual(first,{winStreak:1,personalBestPayout:18,newPersonalBest:true});
+  const repeat=logic.updateRewardState(first,{won:true,payout:12});
+  assert.deepEqual(repeat,{winStreak:2,personalBestPayout:18,newPersonalBest:false});
+  const record=logic.updateRewardState(repeat,{won:true,payout:40});
+  assert.deepEqual(record,{winStreak:3,personalBestPayout:40,newPersonalBest:true});
+  assert.deepEqual(logic.updateRewardState(record,{won:false,payout:0}),{winStreak:0,personalBestPayout:40,newPersonalBest:false});
+});
+
+test('settlement dopamine effects are wired to real ticket and race data',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8'),html=fs.readFileSync(require.resolve('../index.html'),'utf8'),css=fs.readFileSync(require.resolve('../css/styles.css'),'utf8');
+  for(const id of ['streakBadge','streakCount','photoFinishBanner','winFlash','personalBestToast'])assert.match(html,new RegExp(`id="${id}"`));
+  for(const fn of ['snapBetSlip','animateWallet','payoutOdds','winningCopy','triggerBigWin','revealResult'])assert.match(script,new RegExp(`function ${fn}\\(`));
+  assert.match(script,/if\(added\)snapBetSlip\(\)/);
+  assert.match(script,/LOGIC\.updateRewardState\(state,result\)/);
+  assert.match(script,/payoutOdds\(ticket,result\)>=20/);
+  assert.match(script,/Number\(resolution\.finishMargin\)<=\.75/);
+  assert.match(script,/winningCopy\(ticket,result\)/);
+  assert.doesNotMatch(script,/favoriteHorseIds|data-favorite/);
+  for(const animation of ['bet-slip-snap','big-win-shake','win-flash','photo-reveal'])assert.match(css,new RegExp(animation));
 });
 
 test('morning lines use traditional increments and avoid large tied groups',()=>{

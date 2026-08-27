@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b0906">
   <meta name="description" content="Underground Racing — a fictional-money horse racing strategy game.">
   <title>Underground Racing</title>
-  <link rel="stylesheet" href="css/styles.css?v=0.8.0">
+  <link rel="stylesheet" href="css/styles.css?v=0.9.0">
 </head>
 <body>
   <main class="app-shell">
@@ -26,7 +26,7 @@
     <section class="screen race-room" id="raceScreen" aria-label="Underground Racing wagering room">
       <div class="player-strip">
         <img id="playerAvatar" alt="">
-        <div><small id="playerTag">YOUR PLAYER</small><b id="playerName"></b><span id="playerBio"></span></div>
+        <div><small id="playerTag">YOUR PLAYER</small><b id="playerName"></b><span class="streak-badge" id="streakBadge" hidden>🔥 <b id="streakCount">0</b> WIN STREAK</span><span id="playerBio"></span></div>
         <div class="player-actions"><button id="soundToggle" type="button" aria-pressed="true">SOUND ON</button><button id="resetGame" type="button">RESET</button></div>
       </div>
 
@@ -71,6 +71,9 @@
     </section>
   </main>
 
+  <div class="photo-finish-banner" id="photoFinishBanner" hidden><b>PHOTO FINISH</b><small>HOLD ALL TICKETS</small></div>
+  <div class="win-flash" id="winFlash" aria-hidden="true"></div>
+
   <dialog id="guideDialog">
     <div class="guide-head"><div><small>WINDOW BASICS</small><h2>HOW TO BUILD A TICKET</h2></div><button id="closeGuide" type="button" aria-label="Close guide">×</button></div>
     <ol><li><b>Pick the wager.</b> Win means first; Place covers first or second; Show covers the top three.</li><li><b>Pick the horse.</b> Exacta requires two horses in exact finishing order. Exacta Box covers either order.</li><li><b>Set the base wager.</b> Across the Board creates three bets. Exacta Box creates two combinations, so total cost multiplies.</li><li><b>Check the ticket.</b> The window always shows track, race, wager, selections, and total before you commit.</li></ol>
@@ -79,11 +82,12 @@
 
   <dialog class="result-dialog" id="resultDialog" aria-labelledby="resultModalTitle">
     <div class="result-modal-head" id="resultModalHead"><img class="result-avatar" id="resultAvatar" alt=""><small>OFFICIAL RESULT</small><h2 id="resultModalTitle">RACE COMPLETE</h2><p id="resultModalSummary"></p></div>
+    <div class="personal-best-toast" id="personalBestToast" hidden></div>
     <div class="result-modal-body" id="resultModalBody"></div>
     <div class="result-modal-actions"><button id="reviewFinish" type="button">REVIEW FINISH</button><button id="modalNextRace" type="button">NEXT RACE</button></div>
   </dialog>
 
-  <script src="js/race-logic.js?v=0.8.0"></script>
-  <script src="js/game.js?v=0.8.0"></script>
+  <script src="js/race-logic.js?v=0.9.0"></script>
+  <script src="js/game.js?v=0.9.0"></script>
 </body>
 </html>
