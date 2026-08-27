@@ -43,9 +43,22 @@ test('race presentation includes audio, ticket lanes, and result modal controls'
   assert.match(css,/\.track\.running \.runner\{transition:none\}/);
   assert.match(css,/@keyframes finish-flash/);
   assert.match(script,/ticket-lane/);
-  for(const id of ['soundToggle','resultDialog','resultModalTitle','reviewFinish','modalNextRace'])assert.match(html,new RegExp(`id="${id}"`));
+  for(const id of ['soundToggle','resultDialog','resultAvatar','resultModalTitle','reviewFinish','modalNextRace'])assert.match(html,new RegExp(`id="${id}"`));
   assert.match(css,/\.lane\.ticket-lane/);
   assert.match(css,/\.result-dialog/);
+  assert.match(css,/\.result-avatar/);
+});
+
+test('each player has neutral, winning, and losing portraits wired to settlement',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8');
+  for(const name of ['betty','bruce','carl']){
+    assert.match(script,new RegExp(`asset:'assets/characters/${name}\\.webp'`));
+    assert.match(script,new RegExp(`happyAsset:'assets/characters/${name}-happy\\.webp'`));
+    assert.match(script,new RegExp(`madAsset:'assets/characters/${name}-mad\\.webp'`));
+    for(const mood of ['happy','mad'])assert.equal(fs.existsSync(require.resolve(`../assets/characters/${name}-${mood}.webp`)),true);
+  }
+  assert.match(script,/setCharacterMood\(won\?'happy':'mad'\)/);
+  assert.match(script,/\$\('#nextRace'\)\.addEventListener\('click',\(\)=>setCharacterMood\(\)\)/);
 });
 
 test('horse identity combinations produce exactly 200 unique names',()=>{
