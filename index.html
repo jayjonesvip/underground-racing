@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b0906">
   <meta name="description" content="Underground Racing — a fictional-money horse racing strategy game.">
   <title>Underground Racing</title>
-  <link rel="stylesheet" href="css/styles.css?v=0.9.1">
+  <link rel="stylesheet" href="css/styles.css?v=0.9.2">
 </head>
 <body>
   <main class="app-shell">
@@ -64,11 +64,20 @@
 
       <div class="mobile-ticket-backdrop" id="ticketBackdrop" hidden></div>
       <div class="mobile-ticket-dock" id="mobileTicketDock">
-        <button id="mobileTicketToggle" type="button" aria-controls="ticketPanel" aria-expanded="false">
+        <button class="mobile-ticket-summary" id="mobileTicketToggle" type="button" aria-controls="ticketPanel" aria-expanded="false">
           <span class="mobile-ticket-pick"><small id="mobileTicketType">WIN · RACE 1</small><b id="mobileTicketPick">SELECT A HORSE</b></span>
           <span class="mobile-ticket-money"><small id="mobileTicketCost">$2 COST</small><b id="mobileTicketReturn">RETURN —</b></span>
           <strong>REVIEW</strong>
         </button>
+        <div class="mobile-quick-controls" id="mobileQuickControls" hidden>
+          <div class="mobile-straight-types" id="mobileStraightTypes" role="group" aria-label="Quick wager type">
+            <button type="button" data-mobile-bet-type="win">WIN</button><button type="button" data-mobile-bet-type="place">PLACE</button><button type="button" data-mobile-bet-type="show">SHOW</button>
+          </div>
+          <div class="mobile-wager-stepper">
+            <button id="mobileStakeDown" type="button" aria-label="Decrease wager">−</button><b id="mobileStakeValue">$2 WAGER</b><button id="mobileStakeUp" type="button" aria-label="Increase wager">+</button>
+          </div>
+          <button class="mobile-place-bet" id="mobilePlaceBet" type="button" disabled>PLACE BET</button>
+        </div>
       </div>
 
       <section class="race-stage" id="raceStage" hidden>
@@ -99,7 +108,7 @@
     <div class="result-modal-actions"><button id="reviewFinish" type="button">REVIEW FINISH</button><button id="modalNextRace" type="button">NEXT RACE</button></div>
   </dialog>
 
-  <script src="js/race-logic.js?v=0.9.1"></script>
-  <script src="js/game.js?v=0.9.1"></script>
+  <script src="js/race-logic.js?v=0.9.2"></script>
+  <script src="js/game.js?v=0.9.2"></script>
 </body>
 </html>

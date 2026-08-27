@@ -18,7 +18,7 @@ dialog{width:min(calc(100% - 24px),520px);padding:0;border:1px solid #8d6a31;bor
 
 .ticket-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}.ticket-close,.ticket-step,.mobile-ticket-dock,.mobile-ticket-backdrop{display:none}
 @media(max-width:720px){
-  .race-room{padding-bottom:92px}
+  .race-room{padding-bottom:92px}.race-room:has(.mobile-ticket-dock.expanded){padding-bottom:154px}
   .ticket-panel{position:fixed;z-index:72;right:8px;bottom:8px;left:8px;top:auto;max-height:min(84dvh,690px);overflow:auto;border-color:#8a682f;border-radius:14px;background:#0d0a06;box-shadow:0 -12px 55px #000e;pointer-events:none;transform:translateY(calc(100% + 18px));transition:transform .22s ease-out}
   .ticket-panel.mobile-open{pointer-events:auto;transform:translateY(0)}
   .ticket-heading{position:sticky;z-index:2;top:0;border-bottom-style:solid;background:#211806f5;backdrop-filter:blur(8px)}
@@ -31,7 +31,7 @@ dialog{width:min(calc(100% - 24px),520px);padding:0;border:1px solid #8d6a31;bor
   .mobile-ticket-backdrop[hidden]{display:none}
   .mobile-ticket-dock{position:fixed;z-index:60;right:max(8px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));left:max(8px,env(safe-area-inset-left));display:block;max-width:704px;margin:auto;padding:5px;border:1px solid #7a5c2c;border-radius:12px;background:#17130df2;box-shadow:0 8px 30px #000e;backdrop-filter:blur(10px)}
   .mobile-ticket-dock[hidden]{display:none}
-  .mobile-ticket-dock button{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;width:100%;padding:7px;border:0;border-radius:8px;background:#0a0805;color:#f5e7c6;text-align:left}
+  .mobile-ticket-summary{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;width:100%;padding:7px;border:0;border-radius:8px;background:#0a0805;color:#f5e7c6;text-align:left}
   .mobile-ticket-pick,.mobile-ticket-money{display:block;min-width:0}
   .mobile-ticket-pick small,.mobile-ticket-pick b,.mobile-ticket-money small,.mobile-ticket-money b{display:block}
   .mobile-ticket-pick small{color:#bd9550;font-size:7px;font-weight:1000;letter-spacing:.65px}
@@ -42,6 +42,16 @@ dialog{width:min(calc(100% - 24px),520px);padding:0;border:1px solid #8d6a31;bor
   .mobile-ticket-dock strong{padding:9px 8px;border:1px solid #765a2c;border-radius:6px;background:#35250d;color:#ecd09a;font-size:8px;letter-spacing:.5px}
   .mobile-ticket-dock.ready{border-color:#d9a64a;box-shadow:0 0 0 1px #d9a64a33,0 8px 30px #000e}
   .mobile-ticket-dock.ready strong{border-color:#dfa946;background:linear-gradient(#c27e1d,#71400b);color:#fff6dd}
+  .mobile-quick-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(132px,1.15fr);gap:5px;margin-top:5px;padding-top:5px;border-top:1px solid #49391f}
+  .mobile-quick-controls[hidden]{display:none}
+  .mobile-straight-types{display:grid;grid-column:1/-1;grid-template-columns:repeat(3,1fr);gap:4px}
+  .mobile-straight-types button,.mobile-wager-stepper button{min-height:30px;border:1px solid #4d402c;border-radius:6px;background:#100d08;color:#9f927c;font-size:8px;font-weight:1000}
+  .mobile-straight-types button.active{border-color:#c99a43;background:#5b3f12;color:#fff0c8}
+  .mobile-wager-stepper{display:grid;grid-template-columns:32px minmax(0,1fr) 32px;gap:3px;align-items:center}
+  .mobile-wager-stepper b{display:grid;place-items:center;height:30px;border:1px solid #4d402c;border-radius:6px;background:#0a0805;color:#f0d59a;font-size:8px;white-space:nowrap}
+  .mobile-place-bet{min-height:30px;border:1px solid #dfa946;border-radius:6px;background:linear-gradient(#c27e1d,#71400b);color:#fff6dd;font-size:8px;font-weight:1000;letter-spacing:.45px}
+  .mobile-place-bet:disabled{border-color:#463d2e;background:#211d17;color:#6d6558}
+  .mobile-ticket-dock.expanded .mobile-ticket-summary strong{border-color:#65502e;background:#231a0c;color:#d4bb89}
   body.ticket-sheet-open{overflow:hidden}
 }
 @media(prefers-reduced-motion:reduce){.ticket-panel{transition:none}}
