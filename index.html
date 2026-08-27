@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+  <meta name="theme-color" content="#0b0906">
+  <meta name="description" content="Underground Racing — a fictional-money horse racing strategy game.">
+  <title>Underground Racing</title>
+  <link rel="stylesheet" href="css/styles.css?v=0.1.0">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div><small>THE BACKSTRETCH · AFTER DARK</small><h1>UNDERGROUND <span>RACING</span></h1></div>
+      <div class="wallet" aria-label="Fictional wallet"><small>WALLET</small><b id="walletValue">$500</b><span>PLAY CREDITS</span></div>
+    </header>
+
+    <section class="screen onboarding active" id="onboardingScreen" aria-labelledby="chooseTitle">
+      <div class="intro-copy"><small>CHOOSE YOUR PLAYER</small><h2 id="chooseTitle">WHO'S AT THE WINDOW?</h2><p>Your character is permanent on this device. Their instincts add flavor—not hidden odds.</p></div>
+      <div class="character-grid" id="characterGrid"></div>
+      <p class="legal-note">Entertainment game only. Fictional credits have no cash value. No real-money wagering.</p>
+    </section>
+
+    <section class="screen race-room" id="raceScreen" aria-label="Underground Racing wagering room">
+      <div class="player-strip">
+        <img id="playerAvatar" alt="">
+        <div><small id="playerTag">YOUR PLAYER</small><b id="playerName"></b><span id="playerBio"></span></div>
+        <button id="resetGame" type="button">RESET</button>
+      </div>
+
+      <section class="race-head">
+        <div><small>UNDERGROUND DOWNS</small><h2>RACE <span id="raceNumber">1</span></h2></div>
+        <div class="condition-badge" id="conditionBadge"><small>TRACK</small><b>FAST</b><span></span></div>
+      </section>
+
+      <div class="main-grid">
+        <section class="program-panel">
+          <div class="section-title"><div><small>THE PROGRAM</small><h3>TONIGHT'S FIELD</h3></div><button class="info-button" id="howToPlay" type="button">HOW TO BET</button></div>
+          <p class="condition-note" id="conditionNote"></p>
+          <div class="horse-list" id="horseList" role="list"></div>
+        </section>
+
+        <aside class="ticket-panel" aria-labelledby="ticketTitle">
+          <div class="ticket-heading"><span>WAGERING WINDOW</span><b id="ticketTitle">BUILD YOUR TICKET</b><small>UNDERGROUND DOWNS · RACE <i id="ticketRace">1</i></small></div>
+          <div class="bet-types" id="betTypes" role="group" aria-label="Wager type"></div>
+          <div class="ticket-help" id="ticketHelp"></div>
+          <div class="ticket-picks" id="ticketPicks" aria-live="polite"></div>
+          <div class="stake-row">
+            <label for="stakeInput">BASE WAGER</label>
+            <div class="stake-buttons" id="stakeButtons"><button type="button" data-stake="2">$2</button><button type="button" data-stake="5">$5</button><button type="button" data-stake="10">$10</button><button type="button" data-stake="25">$25</button></div>
+            <input id="stakeInput" type="number" min="2" step="1" value="2" inputmode="numeric" aria-label="Base wager in fictional credits">
+          </div>
+          <div class="ticket-total"><span>TOTAL TICKET COST</span><b id="ticketCost">$2</b><small id="ticketSummary">SELECT A HORSE</small></div>
+          <button class="place-bet" id="placeBet" type="button" disabled>PLACE FICTIONAL WAGER</button>
+          <div class="ticket-message" id="ticketMessage" role="status"></div>
+        </aside>
+      </div>
+
+      <section class="race-stage" id="raceStage" hidden>
+        <div class="race-stage-head"><small>LIVE · RACE <span id="liveRaceNumber">1</span></small><b id="raceCall">THEY'RE LOADING THE GATE</b></div>
+        <div class="track" id="track"></div>
+        <div class="result-board" id="resultBoard" hidden></div>
+        <button class="next-race" id="nextRace" type="button" hidden>NEXT RACE</button>
+      </section>
+
+      <section class="history-panel"><div class="section-title"><div><small>YOUR LEDGER</small><h3>RECENT TICKETS</h3></div></div><div id="historyList"></div></section>
+      <footer>FICTIONAL CREDITS · ENTERTAINMENT ONLY · RESULTS ARE SIMULATED</footer>
+    </section>
+  </main>
+
+  <dialog id="guideDialog">
+    <div class="guide-head"><div><small>WINDOW BASICS</small><h2>HOW TO BUILD A TICKET</h2></div><button id="closeGuide" type="button" aria-label="Close guide">×</button></div>
+    <ol><li><b>Pick the wager.</b> Win means first; Place covers first or second; Show covers the top three.</li><li><b>Pick the horse.</b> Exacta requires two horses in exact finishing order. Exacta Box covers either order.</li><li><b>Set the base wager.</b> Across the Board creates three bets. Exacta Box creates two combinations, so total cost multiplies.</li><li><b>Check the ticket.</b> The window always shows track, race, wager, selections, and total before you commit.</li></ol>
+    <p>Trifecta and multi-race tickets are coming later. Start simple, read the form, and protect the wallet.</p>
+  </dialog>
+
+  <script src="js/race-logic.js?v=0.1.0"></script>
+  <script src="js/game.js?v=0.1.0"></script>
+</body>
+</html>
