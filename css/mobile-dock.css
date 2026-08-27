@@ -1,9 +1,14 @@
 .race-stage[hidden],.result-board[hidden],.next-race[hidden]{display:none!important}
 .ticket-close,.ticket-step,.mobile-ticket-dock,.mobile-ticket-backdrop,.mobile-ticket-spacer{display:none}
 @media(max-width:720px){
-  .race-room{padding-bottom:12px}
-  .mobile-ticket-spacer{display:block;flex-shrink:0;height:var(--ticket-dock-space,92px);pointer-events:none}
-  .ticket-panel{position:fixed;z-index:72;right:8px;bottom:calc(var(--ticket-dock-space,92px) + 8px);left:8px;top:auto;max-height:min(78dvh,640px);overflow:auto;border-color:#8a682f;border-radius:14px;background:#0d0a06;box-shadow:0 -12px 55px #000e;pointer-events:none;visibility:hidden;transform:translateY(calc(100% + 24px));transition:transform .22s ease-out,visibility 0s linear .22s}
+  .race-room,
+  .race-room:has(.mobile-ticket-dock.expanded),
+  .race-room:has(#mobileExoticTypes:not([hidden])){padding-bottom:8px}
+  .mobile-ticket-spacer{display:none;height:0;pointer-events:none}
+  .race-room:has(#mobileTicketDock:not([hidden])) .mobile-ticket-spacer{display:block;height:var(--ticket-dock-space,72px)}
+  .race-room:has(#mobileTicketDock:not([hidden]).expanded) .mobile-ticket-spacer{height:var(--ticket-dock-space,148px)}
+  .race-room:has(#mobileTicketDock:not([hidden]) #mobileExoticTypes:not([hidden])) .mobile-ticket-spacer{height:var(--ticket-dock-space,188px)}
+  .ticket-panel{position:fixed;z-index:72;right:8px;bottom:calc(var(--ticket-dock-space,72px) + 8px);left:8px;top:auto;max-height:min(78dvh,640px);overflow:auto;border-color:#8a682f;border-radius:14px;background:#0d0a06;box-shadow:0 -12px 55px #000e;pointer-events:none;visibility:hidden;transform:translateY(calc(100% + 24px));transition:transform .22s ease-out,visibility 0s linear .22s}
   .ticket-panel.mobile-open{pointer-events:auto;visibility:visible;transform:translateY(0);transition:transform .22s ease-out,visibility 0s}
   .ticket-heading{position:sticky;z-index:2;top:0;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom-style:solid;background:#211806f5;backdrop-filter:blur(8px)}
   .ticket-close{display:grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid #65502e;border-radius:8px;background:#100d08;color:#f3e1b4;font-size:26px;line-height:1}
