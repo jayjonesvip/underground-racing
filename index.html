@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b0906">
   <meta name="description" content="Underground Racing — a fictional-money horse racing strategy game.">
   <title>Underground Racing</title>
-  <link rel="stylesheet" href="css/styles.css?v=0.7.1">
+  <link rel="stylesheet" href="css/styles.css?v=0.8.0">
 </head>
 <body>
   <main class="app-shell">
@@ -53,6 +53,7 @@
             <input id="stakeInput" type="number" min="2" step="1" value="2" inputmode="numeric" aria-label="Base wager in fictional credits">
           </div>
           <div class="ticket-total"><span>TOTAL TICKET COST</span><b id="ticketCost">$2</b><small id="ticketSummary">SELECT A HORSE</small></div>
+          <div class="potential-return" id="potentialReturn" aria-live="polite"><small>POTENTIAL RETURN</small><span>SELECT YOUR RUNNER</span></div>
           <button class="place-bet" id="placeBet" type="button" disabled>PLACE FICTIONAL WAGER</button>
           <div class="ticket-message" id="ticketMessage" role="status"></div>
         </aside>
@@ -82,7 +83,7 @@
     <div class="result-modal-actions"><button id="reviewFinish" type="button">REVIEW FINISH</button><button id="modalNextRace" type="button">NEXT RACE</button></div>
   </dialog>
 
-  <script src="js/race-logic.js?v=0.7.1"></script>
-  <script src="js/game.js?v=0.7.1"></script>
+  <script src="js/race-logic.js?v=0.8.0"></script>
+  <script src="js/game.js?v=0.8.0"></script>
 </body>
 </html>

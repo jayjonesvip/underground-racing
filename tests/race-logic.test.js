@@ -124,6 +124,23 @@ test('straight, across-board, and exacta tickets settle correctly',()=>{
   assert.equal(logic.settleTicket({type:'exacta',stake:2,cost:2,picks:['b','a']},field,finish).won,false);
 });
 
+test('ticket projections expose the same returns used by settlement',()=>{
+  const field=[{id:'a',odds:2},{id:'b',odds:3},{id:'c',odds:5}],win={type:'win',stake:2,cost:2,picks:['a']},across={type:'atb',stake:2,cost:6,picks:['a']},exacta={type:'exacta',stake:2,cost:2,picks:['a','b']};
+  assert.deepEqual(logic.projectTicketReturns(win,field),[{label:'IF 1ST',payout:6,profit:4}]);
+  assert.deepEqual(logic.projectTicketReturns(across,field),[{label:'IF 1ST',payout:13,profit:7},{label:'IF 2ND',payout:7,profit:1},{label:'IF 3RD',payout:3,profit:-3}]);
+  assert.equal(logic.projectTicketReturns(exacta,field)[0].payout,logic.settleTicket(exacta,field,['a','b','c']).payout);
+  assert.equal(logic.projectTicketReturns(across,field)[0].payout,logic.settleTicket(across,field,['a','b','c']).payout);
+});
+
+test('wagering window renders projected return and net before purchase',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8'),html=fs.readFileSync(require.resolve('../index.html'),'utf8'),css=fs.readFileSync(require.resolve('../css/styles.css'),'utf8');
+  assert.match(html,/id="potentialReturn"/);
+  assert.match(script,/function renderPotentialReturns\(cost\)/);
+  assert.match(script,/LOGIC\.projectTicketReturns/);
+  assert.match(script,/POTENTIAL RETURN/);
+  assert.match(css,/\.potential-return/);
+});
+
 test('race finish returns each horse exactly once',()=>{
   const race=logic.buildRace(horses,conditions,42),order=logic.finishRace(race.field,race.condition,[.1,.2,.3,.4,.5,.6]);
   assert.equal(order.length,6);

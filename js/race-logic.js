@@ -121,6 +121,18 @@
     return amount*({atb:3,exactaBox:2}[type]||1);
   }
 
+  function projectTicketReturns(ticket,field){
+    const horse=(field||[]).find(item=>item.id===ticket?.picks?.[0]),secondHorse=(field||[]).find(item=>item.id===ticket?.picks?.[1]),stake=Math.max(0,whole(ticket?.stake)),cost=Math.max(0,whole(ticket?.cost,ticketCost(ticket?.type,stake)));
+    if(!horse||!stake)return [];
+    const straight=multiplier=>Math.round(stake*(1+horse.odds*multiplier)),item=(label,payout)=>({label,payout,profit:payout-cost});
+    if(ticket.type==='win')return [item('IF 1ST',Math.round(stake*(horse.odds+1)))];
+    if(ticket.type==='place')return [item('IF TOP 2',straight(.48))];
+    if(ticket.type==='show')return [item('IF TOP 3',straight(.28))];
+    if(ticket.type==='atb'){const show=straight(.28),place=straight(.48),win=Math.round(stake*(horse.odds+1));return [item('IF 1ST',win+place+show),item('IF 2ND',place+show),item('IF 3RD',show)]}
+    if((ticket.type==='exacta'||ticket.type==='exactaBox')&&secondHorse){const multiplier=ticket.type==='exacta'?1.35:1.15;return [item(ticket.type==='exacta'?'IF EXACT':'IF EITHER ORDER',Math.round(stake*(1+horse.odds*secondHorse.odds*multiplier)))]}
+    return [];
+  }
+
   function validateTicket({type,stake,picks,wallet,field}){
     const validTypes=['win','place','show','atb','exacta','exactaBox'],amount=whole(stake),ids=new Set((field||[]).map(horse=>horse.id)),chosen=Array.isArray(picks)?picks.filter(id=>ids.has(id)):[];
     if(!validTypes.includes(type))return {ok:false,reason:'Choose a wager type.'};
@@ -144,5 +156,5 @@
     return {won:payout>0,payout,profit:payout-ticket.cost,first,second,third};
   }
 
-  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,selectCompetitiveField,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,validateTicket,settleTicket};
+  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,selectCompetitiveField,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,projectTicketReturns,validateTicket,settleTicket};
 });
