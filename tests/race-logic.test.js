@@ -36,8 +36,12 @@ test('race presentation includes audio, ticket lanes, and result modal controls'
   assert.match(script,/function startBell\(/);
   assert.match(script,/function startRaceAudio\(/);
   assert.match(script,/function outcomeSound\(won\)/);
-  assert.match(script,/function finishProgress\(position\)\{return 96-Math\.max\(0,position\)\*7\}/);
-  assert.match(script,/step===10\?finishProgress\(position\):Math\.min\(91,base\)/);
+  assert.match(script,/function finishTime\(position\)\{return 8000\+Math\.max\(0,position\)\*350\}/);
+  assert.match(script,/function progressAtTime\(position,elapsed\)/);
+  assert.match(script,/function markLaneFinished\(lane,position\)/);
+  assert.match(script,/raceFrame=requestAnimationFrame\(frame\)/);
+  assert.match(css,/\.track\.running \.runner\{transition:none\}/);
+  assert.match(css,/@keyframes finish-flash/);
   assert.match(script,/ticket-lane/);
   for(const id of ['soundToggle','resultDialog','resultModalTitle','reviewFinish','modalNextRace'])assert.match(html,new RegExp(`id="${id}"`));
   assert.match(css,/\.lane\.ticket-lane/);
