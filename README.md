@@ -43,7 +43,7 @@ Then visit `http://localhost:8080`.
 
 ## Persistence
 
-Character, wallet, current race, and recent ticket history are stored in browser `localStorage` under `underground-racing-save-v1`. Use the in-game Reset button to clear it.
+Character, wallet, current race, and recent ticket history are stored in browser `localStorage` under `underground-racing-save-v1`. At local midnight, a new daily meet begins at Race 1 while the wallet, horse records, and ledger persist. A race with a committed ticket always settles before the daily reset. Use the in-game Reset button to clear the full save.
 
 ## Tests
 

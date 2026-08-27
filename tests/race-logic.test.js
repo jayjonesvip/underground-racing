@@ -75,6 +75,18 @@ test('landing screen separates new and returning player journeys',()=>{
   assert.match(css,/\.landing-stats/);
 });
 
+test('daily meets reset the race number at local midnight without clearing progress',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8');
+  assert.match(script,/function localDateKey|const localDateKey=/);
+  assert.match(script,/meetDate:localDateKey\(\)/);
+  assert.match(script,/function syncDailyMeet\(\)/);
+  assert.match(script,/state\.meetDate===today\|\|state\.pendingTicket/);
+  assert.match(script,/state\.raceNumber=1/);
+  assert.match(script,/next\.setHours\(24,0,0,100\)/);
+  assert.match(script,/visibilitychange/);
+  assert.match(script,/`\$\{state\.seed\}\|\$\{state\.meetDate\}\|\$\{state\.raceNumber\}`/);
+});
+
 test('horse identity combinations produce exactly 200 unique names',()=>{
   const names=logic.buildUniqueNames(['Midnight Bell'],Array.from({length:25},(_,index)=>`Lead ${index}`),Array.from({length:20},(_,index)=>`Tail ${index}`),200);
   assert.equal(names.length,200);
