@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#0b0906">
   <meta name="description" content="Underground Racing — a fictional-money horse racing strategy game.">
   <title>Underground Racing</title>
-  <link rel="stylesheet" href="css/styles.css?v=0.9.7">
-  <link rel="stylesheet" href="css/mobile-dock.css?v=0.9.7">
+  <link rel="stylesheet" href="css/styles.css?v=0.9.8">
+  <link rel="stylesheet" href="css/mobile-dock.css?v=0.9.8">
 </head>
 <body>
   <main class="app-shell">
@@ -64,7 +64,6 @@
       </div>
 
       <div class="mobile-ticket-backdrop" id="ticketBackdrop" hidden></div>
-      <div class="mobile-ticket-spacer" id="mobileTicketSpacer" aria-hidden="true"></div>
       <div class="mobile-ticket-dock" id="mobileTicketDock">
         <button class="mobile-ticket-summary" id="mobileTicketToggle" type="button" aria-controls="ticketPanel" aria-expanded="false">
           <span class="mobile-ticket-pick"><small id="mobileTicketType">WIN · RACE 1</small><b id="mobileTicketPick">SELECT A HORSE</b></span>
@@ -94,6 +93,7 @@
       </section>
 
       <section class="history-panel"><div class="section-title"><div><small>YOUR LEDGER</small><h3>RECENT TICKETS</h3></div></div><div id="historyList"></div></section>
+      <div class="mobile-ticket-spacer" id="mobileTicketSpacer" aria-hidden="true"></div>
       <footer>FICTIONAL CREDITS · ENTERTAINMENT ONLY · RESULTS ARE SIMULATED</footer>
     </section>
   </main>
@@ -114,7 +114,7 @@
     <div class="result-modal-actions"><button id="reviewFinish" type="button">REVIEW FINISH</button><button id="modalNextRace" type="button">NEXT RACE</button></div>
   </dialog>
 
-  <script src="js/race-logic.js?v=0.9.7"></script>
-  <script src="js/game.js?v=0.9.7"></script>
+  <script src="js/race-logic.js?v=0.9.8"></script>
+  <script src="js/game.js?v=0.9.8"></script>
 </body>
 </html>
