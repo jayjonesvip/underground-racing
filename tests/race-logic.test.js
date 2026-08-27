@@ -141,6 +141,18 @@ test('wagering window renders projected return and net before purchase',()=>{
   assert.match(css,/\.potential-return/);
 });
 
+test('mobile wagering keeps a live ticket dock and expandable review sheet',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8'),html=fs.readFileSync(require.resolve('../index.html'),'utf8'),css=fs.readFileSync(require.resolve('../css/styles.css'),'utf8');
+  for(const id of ['ticketPanel','mobileTicketDock','mobileTicketToggle','mobileTicketPick','mobileTicketCost','mobileTicketReturn','ticketBackdrop','closeTicket'])assert.match(html,new RegExp(`id="${id}"`));
+  for(const step of ['BET TYPE','SELECTION','BASE WAGER'])assert.match(html,new RegExp(`<span>${step}</span>`));
+  assert.match(script,/function setTicketSheet\(open\)/);
+  assert.match(script,/mobileTicketReturn/);
+  assert.match(script,/highestReturn/);
+  assert.match(css,/@media\(max-width:720px\)/);
+  assert.match(css,/\.mobile-ticket-dock/);
+  assert.match(css,/\.ticket-panel\.mobile-open/);
+});
+
 test('race finish returns each horse exactly once',()=>{
   const race=logic.buildRace(horses,conditions,42),order=logic.finishRace(race.field,race.condition,[.1,.2,.3,.4,.5,.6]);
   assert.equal(order.length,6);
