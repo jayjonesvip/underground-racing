@@ -10,6 +10,8 @@ The persistent circuit contains 200 fictional horses. Each horse is generated on
 
 Each record keeps age/sex, trainer, jockey, assigned weight, starts and in-the-money record, actual simulated earnings per start, last-five finishes, current and top speed figures, class rating, early and late pace, workout time/rank, preferred distance and surface, equipment, medication notation, wet-track record, and recent race details. The mobile program promotes the most actionable portion of that data.
 
+Race outcomes are committed by a deterministic seed when the card is created. Ability, class, pace, form, surface and distance fit, weight, workouts, and consistency drive most of the result. Seeded pace scenarios, trip variation, and rare incidents allow believable upsets. The same card cannot be rerolled by refreshing or changing a wager. Because this is a static client-only game, a technical player can inspect the seed and public algorithm; authoritative hidden results would require server-side resolution.
+
 Jockeys use conventional full names drawn from Cage Grind's American and Latin fighter-name pools, with the roster intentionally weighted toward Spanish-language names.
 
 Generator bounds are informed by Equibase's public In Today list, Full Past Performance documentation, sample E-Graphs, and published speed-figure leaders: age 2–9, assigned weight 110–126 lb, 1–55 starts, speed/pace figures 35–120, class ratings 50–120, morning lines 3/2–30/1, recent finishes 1–12, and workouts 46.0–53.0 seconds. These are game-safe observed bands, not claims about absolute historical records.

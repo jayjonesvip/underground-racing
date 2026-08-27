@@ -30,6 +30,13 @@ test('jockey roster reuses the American and Latin Cage Grind name pools',()=>{
   assert.match(source,/jockey:jockeys\[Math\.floor\(random\(\)\*jockeys\.length\)\]/);
 });
 
+test('horse identity combinations produce exactly 200 unique names',()=>{
+  const names=logic.buildUniqueNames(['Midnight Bell'],Array.from({length:25},(_,index)=>`Lead ${index}`),Array.from({length:20},(_,index)=>`Tail ${index}`),200);
+  assert.equal(names.length,200);
+  assert.equal(new Set(names).size,200);
+  assert.ok(new Set(names.slice(1).map(name=>name.split(' ')[1])).size>20);
+});
+
 test('track conditions change the rating of specialists',()=>{
   const specialist={speed:7,stamina:7,break:7,consistency:7,form:[2,2,2],conditionBias:{fast:2,muddy:-2}};
   assert.ok(logic.horseRating(specialist,conditions[0])>logic.horseRating(specialist,conditions[1]));
@@ -64,6 +71,22 @@ test('race finish returns each horse exactly once',()=>{
   const race=logic.buildRace(horses,conditions,42),order=logic.finishRace(race.field,race.condition,[.1,.2,.3,.4,.5,.6]);
   assert.equal(order.length,6);
   assert.equal(new Set(order).size,6);
+});
+
+test('a committed race seed always resolves to the same result',()=>{
+  const race=logic.buildRace(horses,conditions,123456),seed=logic.hashSeed(`${race.seed}|official-result`),first=logic.resolveRace(race.field,race.condition,seed),repeat=logic.resolveRace(race.field,race.condition,seed);
+  assert.deepEqual(first,repeat);
+  assert.equal(first.order.length,6);
+  assert.equal(new Set(first.order).size,6);
+  assert.ok(['hot','slow','honest'].includes(first.paceScenario));
+});
+
+test('seeded trip variance permits occasional longshot wins without erasing form',()=>{
+  const field=[100,98,96,94,92,90].map((rating,index)=>({id:`seeded-${index}`,rating,consistency:6+index%3,stamina:7,break:7,style:['FRONT','PRESSER','CLOSER'][index%3]})),wins=Array(6).fill(0);
+  for(let index=0;index<2000;index++){const winner=logic.resolveRace(field,conditions[0],logic.hashSeed(`distribution-${index}`)).order[0];wins[Number(winner.split('-')[1])]++}
+  assert.ok(wins[0]>wins[5]);
+  assert.ok(wins[0]/2000>.35);
+  assert.ok((wins[3]+wins[4]+wins[5])/2000>.05);
 });
 
 test('five virtual world rounds give every horse five real results',()=>{
