@@ -30,6 +30,18 @@ test('jockey roster reuses the American and Latin Cage Grind name pools',()=>{
   assert.match(source,/jockey:jockeys\[Math\.floor\(random\(\)\*jockeys\.length\)\]/);
 });
 
+test('race presentation includes audio, ticket lanes, and result modal controls',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8'),html=fs.readFileSync(require.resolve('../index.html'),'utf8'),css=fs.readFileSync(require.resolve('../css/styles.css'),'utf8');
+  assert.match(script,/AudioContext\|\|window\.webkitAudioContext/);
+  assert.match(script,/function startBell\(/);
+  assert.match(script,/function startRaceAudio\(/);
+  assert.match(script,/function outcomeSound\(won\)/);
+  assert.match(script,/ticket-lane/);
+  for(const id of ['soundToggle','resultDialog','resultModalTitle','reviewFinish','modalNextRace'])assert.match(html,new RegExp(`id="${id}"`));
+  assert.match(css,/\.lane\.ticket-lane/);
+  assert.match(css,/\.result-dialog/);
+});
+
 test('horse identity combinations produce exactly 200 unique names',()=>{
   const names=logic.buildUniqueNames(['Midnight Bell'],Array.from({length:25},(_,index)=>`Lead ${index}`),Array.from({length:20},(_,index)=>`Tail ${index}`),200);
   assert.equal(names.length,200);

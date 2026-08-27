@@ -27,6 +27,8 @@ The first playable wagering menu includes:
 - Exacta
 - Exacta Box
 
+Race presentation includes a synthesized starting bell, low track rumble and hoof texture, distinct win/loss cues, cyan highlighting for every horse covered by the ticket, and an official-result modal. Sounds require no downloaded audio assets and can be disabled with the persistent Sound toggle.
+
 The ticket follows the beginner-friendly window sequence described by the [Churchill Downs Beginner's Guide](https://www.churchilldowns.com/wager/beginners-guide/): track, race, base amount, wager type, and program number. This is an entertainment game only; credits have no monetary value and no real-money wagering is offered.
 
 ## Local development
