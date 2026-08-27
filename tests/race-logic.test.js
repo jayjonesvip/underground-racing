@@ -1,5 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
+const fs=require('node:fs');
 const logic=require('../js/race-logic.js');
 
 const conditions=[{id:'fast',pace:'speed'},{id:'muddy',pace:'stamina'}];
@@ -21,6 +22,12 @@ test('Equibase-derived generator ranges remain explicit and bounded',()=>{
   assert.deepEqual(logic.PERFORMANCE_RANGES.paceFigure,[35,120]);
   assert.deepEqual(logic.PERFORMANCE_RANGES.weight,[110,126]);
   assert.deepEqual(logic.PERFORMANCE_RANGES.morningLine,[1.5,30]);
+});
+
+test('jockey roster reuses the American and Latin Cage Grind name pools',()=>{
+  const source=fs.readFileSync(require.resolve('../js/game.js'),'utf8');
+  for(const name of ['Rafael Garcia','Santiago Morales','Adrian Rivera','Randy Jones','Marcus Davis'])assert.match(source,new RegExp(name));
+  assert.match(source,/jockey:jockeys\[\(index\*7\)%jockeys\.length\]/);
 });
 
 test('track conditions change the rating of specialists',()=>{

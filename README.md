@@ -8,6 +8,8 @@ Choose Betty, Bruce, or Carl, study each race's form and track fit, build a tick
 
 The rotating roster contains 36 fictional horses. Each record keeps age/sex, trainer, jockey, assigned weight, starts and in-the-money record, earnings per start, recent finishes, current and top speed figures, class rating, early and late pace, workout time/rank, preferred distance and surface, equipment, medication notation, wet-track record, and a recent trip comment. The mobile program promotes the most actionable portion of that data.
 
+Jockeys use conventional full names drawn from Cage Grind's American and Latin fighter-name pools, with the roster intentionally weighted toward Spanish-language names.
+
 Generator bounds are informed by Equibase's public In Today list, Full Past Performance documentation, sample E-Graphs, and published speed-figure leaders: age 2–9, assigned weight 110–126 lb, 1–55 starts, speed/pace figures 35–120, class ratings 50–120, morning lines 3/2–30/1, recent finishes 1–12, and workouts 46.0–53.0 seconds. These are game-safe observed bands, not claims about absolute historical records.
 
 The first playable wagering menu includes:
