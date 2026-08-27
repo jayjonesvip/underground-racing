@@ -62,6 +62,19 @@ test('each player has neutral, winning, and losing portraits wired to settlement
   assert.match(script,/\$\('#nextRace'\)\.addEventListener\('click',\(\)=>setCharacterMood\(\)\)/);
 });
 
+test('landing screen separates new and returning player journeys',()=>{
+  const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8'),html=fs.readFileSync(require.resolve('../index.html'),'utf8'),css=fs.readFileSync(require.resolve('../css/styles.css'),'utf8');
+  assert.match(html,/id="landingScreen"/);
+  assert.match(script,/function recentStats\(\)/);
+  assert.match(script,/id="newCareer"/);
+  assert.match(script,/id="continueCareer"/);
+  for(const label of ['WALLET','RECENT TICKETS','WIN RATE','RECENT NET'])assert.match(script,new RegExp(label));
+  assert.match(script,/renderLanding\(\);/);
+  assert.match(script,/if\(selectedCharacter\(\)\)ensureRace\(\);/);
+  assert.match(css,/\.landing-hero/);
+  assert.match(css,/\.landing-stats/);
+});
+
 test('horse identity combinations produce exactly 200 unique names',()=>{
   const names=logic.buildUniqueNames(['Midnight Bell'],Array.from({length:25},(_,index)=>`Lead ${index}`),Array.from({length:20},(_,index)=>`Tail ${index}`),200);
   assert.equal(names.length,200);
