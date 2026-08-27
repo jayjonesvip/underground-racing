@@ -21,7 +21,7 @@ test('Equibase-derived generator ranges remain explicit and bounded',()=>{
   assert.deepEqual(logic.PERFORMANCE_RANGES.classRating,[50,120]);
   assert.deepEqual(logic.PERFORMANCE_RANGES.paceFigure,[35,120]);
   assert.deepEqual(logic.PERFORMANCE_RANGES.weight,[110,126]);
-  assert.deepEqual(logic.PERFORMANCE_RANGES.morningLine,[1.5,30]);
+  assert.deepEqual(logic.PERFORMANCE_RANGES.morningLine,[1.5,50]);
 });
 
 test('jockey roster reuses the American and Latin Cage Grind name pools',()=>{
@@ -79,6 +79,13 @@ test('a committed race seed always resolves to the same result',()=>{
   assert.equal(first.order.length,6);
   assert.equal(new Set(first.order).size,6);
   assert.ok(['hot','slow','honest'].includes(first.paceScenario));
+});
+
+test('morning lines use traditional increments and avoid large tied groups',()=>{
+  const field=Array.from({length:6},(_,index)=>({id:`line-${index}`,rating:100-index})),probabilities={'line-0':.38,'line-1':.24,'line-2':.15,'line-3':.08,'line-4':.08,'line-5':.07},prices=logic.priceMorningLine(field,probabilities),counts={};
+  for(const price of Object.values(prices)){assert.ok(logic.MORNING_LINE_LADDER.includes(price));counts[price]=(counts[price]||0)+1}
+  assert.ok(Math.max(...Object.values(counts))<=2);
+  assert.ok(prices['line-0']<=prices['line-5']);
 });
 
 test('seeded trip variance permits occasional longshot wins without erasing form',()=>{

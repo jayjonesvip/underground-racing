@@ -7,7 +7,8 @@
 
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
   const whole=(value,fallback=0)=>Number.isFinite(Number(value))?Math.floor(Number(value)):fallback;
-  const PERFORMANCE_RANGES=Object.freeze({age:[2,9],weight:[110,126],starts:[1,55],speedFigure:[35,120],classRating:[50,120],paceFigure:[35,120],morningLine:[1.5,30],recentFinish:[1,12],workoutSeconds:[46,53]});
+  const PERFORMANCE_RANGES=Object.freeze({age:[2,9],weight:[110,126],starts:[1,55],speedFigure:[35,120],classRating:[50,120],paceFigure:[35,120],morningLine:[1.5,50],recentFinish:[1,12],workoutSeconds:[46,53]});
+  const MORNING_LINE_LADDER=Object.freeze([1.5,2,2.5,3,4,6,8,10,12,15,20,30,40,50]);
   const hashSeed=value=>{let hash=2166136261;for(const char of String(value)){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}return hash>>>0};
   function seededRandom(seed){let value=whole(seed)>>>0;return()=>{value+=0x6D2B79F5;let n=value;n=Math.imul(n^n>>>15,n|1);n^=n+Math.imul(n^n>>>7,n|61);return((n^n>>>14)>>>0)/4294967296}}
   function shuffle(list,random){const copy=list.slice();for(let index=copy.length-1;index>0;index--){const swap=Math.floor(random()*(index+1));[copy[index],copy[swap]]=[copy[swap],copy[index]]}return copy}
@@ -31,8 +32,8 @@
   function buildRace(horses,conditions,seed,fieldSize=6,priceOdds=true){
     const random=seededRandom(seed),baseCondition=conditions[Math.floor(random()*conditions.length)],distances=[{distance:'6 FURLONGS',distanceType:'sprint'},{distance:'7 FURLONGS',distanceType:'sprint'},{distance:'1 MILE',distanceType:'route'}],condition={...baseCondition,...distances[Math.floor(random()*distances.length)],raceClass:76+Math.floor(random()*20)},field=shuffle(horses,random).slice(0,fieldSize).map((horse,index)=>({...horse,program:index+1}));
     field.forEach(horse=>{horse.rating=Number(horseRating(horse,condition).toFixed(2));horse.fit=conditionFit(horse,condition)});
-    const probabilities=priceOdds?estimateWinProbabilities(field,condition,hashSeed(`${seed}|morning-line`),500):null,max=Math.max(...field.map(horse=>horse.rating));
-    field.forEach(horse=>{const probability=probabilities?.[horse.id],gap=Math.max(0,max-horse.rating),raw=probability?1/probability-1:1.6+gap*.28+(1-horse.consistency/10)*2;horse.winProbability=probability?Number(probability.toFixed(4)):null;horse.odds=Math.max(PERFORMANCE_RANGES.morningLine[0],Math.min(PERFORMANCE_RANGES.morningLine[1],Math.round(raw*2)/2))});
+    const probabilities=priceOdds?estimateWinProbabilities(field,condition,hashSeed(`${seed}|morning-line`),2000):null,prices=probabilities?priceMorningLine(field,probabilities):null,max=Math.max(...field.map(horse=>horse.rating));
+    field.forEach(horse=>{const probability=probabilities?.[horse.id]??null,gap=Math.max(0,max-horse.rating),raw=1.6+gap*.28+(1-horse.consistency/10)*2;horse.winProbability=probability===null?null:Number(probability.toFixed(4));horse.odds=prices?.[horse.id]??Math.max(PERFORMANCE_RANGES.morningLine[0],Math.min(PERFORMANCE_RANGES.morningLine[1],Math.round(raw*2)/2))});
     return {seed:seed>>>0,condition,field};
   }
 
@@ -60,10 +61,16 @@
     return {seed:seed>>>0,order:details.map(result=>result.id),details,paceScenario,winnerStory};
   }
 
-  function estimateWinProbabilities(field,condition,seed,trials=500){
-    const counts=Object.fromEntries((field||[]).map(horse=>[horse.id,0])),total=Math.max(50,whole(trials,500));
+  function estimateWinProbabilities(field,condition,seed,trials=2000){
+    const counts=Object.fromEntries((field||[]).map(horse=>[horse.id,0])),total=Math.max(50,whole(trials,2000));
     for(let index=0;index<total;index++){const winner=resolveRace(field,condition,hashSeed(`${seed}|trial|${index}`)).order[0];if(winner in counts)counts[winner]++}
-    return Object.fromEntries(Object.entries(counts).map(([id,count])=>[id,Math.max(.005,count/total)]));
+    return Object.fromEntries(Object.entries(counts).map(([id,count])=>[id,count/total]));
+  }
+
+  function priceMorningLine(field,probabilities){
+    const nearestIndex=raw=>MORNING_LINE_LADDER.reduce((best,value,index)=>Math.abs(value-raw)<Math.abs(MORNING_LINE_LADDER[best]-raw)?index:best,0),used=new Map(),prices={},weakestFirst=(field||[]).slice().sort((a,b)=>(probabilities[a.id]||0)-(probabilities[b.id]||0)||(Number(a.rating)||0)-(Number(b.rating)||0));let strongestAllowed=MORNING_LINE_LADDER.length-1;
+    weakestFirst.forEach(horse=>{const probability=probabilities[horse.id]||0,raw=probability>0?1/probability-1:PERFORMANCE_RANGES.morningLine[1];let index=Math.min(nearestIndex(raw),strongestAllowed);while((used.get(index)||0)>=2&&index>0)index--;used.set(index,(used.get(index)||0)+1);prices[horse.id]=MORNING_LINE_LADDER[index];strongestAllowed=index});
+    return prices;
   }
 
   function applyRaceResult(horses,field,condition,finishOrder,raceId,purse=30000,raceDetails=[]){
@@ -129,5 +136,5 @@
     return {won:payout>0,payout,profit:payout-ticket.cost,first,second,third};
   }
 
-  return {PERFORMANCE_RANGES,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,buildRace,finishRace,resolveRace,estimateWinProbabilities,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,validateTicket,settleTicket};
+  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,validateTicket,settleTicket};
 });
