@@ -47,6 +47,7 @@ test('race presentation includes audio, ticket lanes, and result modal controls'
   assert.match(css,/\.lane\.ticket-lane/);
   assert.match(css,/\.result-dialog/);
   assert.match(css,/\.result-avatar/);
+  assert.match(css,/\.result-avatar\{[^}]*border-radius:12px/);
 });
 
 test('each player has neutral, winning, and losing portraits wired to settlement',()=>{
