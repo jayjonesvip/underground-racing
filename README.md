@@ -12,7 +12,7 @@ Each record keeps age/sex, trainer, jockey, assigned weight, starts and in-the-m
 
 Race outcomes are committed by a deterministic seed when the card is created. Ability, class, pace, form, surface and distance fit, weight, workouts, and consistency drive most of the result. Seeded pace scenarios, trip variation, and rare incidents allow believable upsets. The same card cannot be rerolled by refreshing or changing a wager. Because this is a static client-only game, a technical player can inspect the seed and public algorithm; authoritative hidden results would require server-side resolution.
 
-The morning line runs 2,000 alternate seeded versions of the field, converts each win share into fair fractional odds, and snaps it to a traditional ladder from 3/2 through 50/1. Unrounded probability and rating order break crowded buckets, with no more than two runners sharing a quoted line in a six-horse field.
+Visible race cards are assembled as competitive class bands: the seeded card selects an ability anchor, then matches it with the five nearest condition-adjusted runners from the 200-horse circuit. The morning line runs 2,000 alternate seeded versions of that matched field, converts each win share into fair fractional odds, and snaps it to a traditional ladder from 3/2 through 50/1. Unrounded probability and rating order break crowded buckets, with no more than two runners sharing a quoted line in a six-horse field.
 
 Jockeys use conventional full names drawn from Cage Grind's American and Latin fighter-name pools, with the roster intentionally weighted toward Spanish-language names.
 

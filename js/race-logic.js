@@ -29,8 +29,16 @@
     return speedFigure*.43+classRating*.18+pace+formScore+(Number(horse.conditionBias?.[condition.id])||0)*1.8+distanceBonus+surfaceBonus+weightAdjustment+workoutBoost;
   }
 
+  function selectCompetitiveField(horses,condition,random,fieldSize=6){
+    const count=Math.min(Math.max(3,whole(fieldSize,6)),(horses||[]).length),pool=shuffle(horses||[],random).map((horse,tie)=>({horse,tie,rating:horseRating(horse,condition)}));
+    if(pool.length<=count)return pool.map(entry=>entry.horse);
+    const ranked=pool.slice().sort((a,b)=>a.rating-b.rating||a.tie-b.tie),edge=Math.min(Math.floor(ranked.length*.1),Math.floor((ranked.length-count)/2)),span=Math.max(1,ranked.length-edge*2),anchor=ranked[edge+Math.floor(random()*span)];
+    const matched=pool.slice().sort((a,b)=>Math.abs(a.rating-anchor.rating)-Math.abs(b.rating-anchor.rating)||a.tie-b.tie).slice(0,count).map(entry=>entry.horse);
+    return shuffle(matched,random);
+  }
+
   function buildRace(horses,conditions,seed,fieldSize=6,priceOdds=true){
-    const random=seededRandom(seed),baseCondition=conditions[Math.floor(random()*conditions.length)],distances=[{distance:'6 FURLONGS',distanceType:'sprint'},{distance:'7 FURLONGS',distanceType:'sprint'},{distance:'1 MILE',distanceType:'route'}],condition={...baseCondition,...distances[Math.floor(random()*distances.length)],raceClass:76+Math.floor(random()*20)},field=shuffle(horses,random).slice(0,fieldSize).map((horse,index)=>({...horse,program:index+1}));
+    const random=seededRandom(seed),baseCondition=conditions[Math.floor(random()*conditions.length)],distances=[{distance:'6 FURLONGS',distanceType:'sprint'},{distance:'7 FURLONGS',distanceType:'sprint'},{distance:'1 MILE',distanceType:'route'}],condition={...baseCondition,...distances[Math.floor(random()*distances.length)],raceClass:76+Math.floor(random()*20)},entrants=priceOdds?selectCompetitiveField(horses,condition,random,fieldSize):shuffle(horses,random).slice(0,fieldSize),field=entrants.map((horse,index)=>({...horse,program:index+1}));
     field.forEach(horse=>{horse.rating=Number(horseRating(horse,condition).toFixed(2));horse.fit=conditionFit(horse,condition)});
     const probabilities=priceOdds?estimateWinProbabilities(field,condition,hashSeed(`${seed}|morning-line`),2000):null,prices=probabilities?priceMorningLine(field,probabilities):null,max=Math.max(...field.map(horse=>horse.rating));
     field.forEach(horse=>{const probability=probabilities?.[horse.id]??null,gap=Math.max(0,max-horse.rating),raw=1.6+gap*.28+(1-horse.consistency/10)*2;horse.winProbability=probability===null?null:Number(probability.toFixed(4));horse.odds=prices?.[horse.id]??Math.max(PERFORMANCE_RANGES.morningLine[0],Math.min(PERFORMANCE_RANGES.morningLine[1],Math.round(raw*2)/2))});
@@ -136,5 +144,5 @@
     return {won:payout>0,payout,profit:payout-ticket.cost,first,second,third};
   }
 
-  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,validateTicket,settleTicket};
+  return {PERFORMANCE_RANGES,MORNING_LINE_LADDER,clamp,hashSeed,seededRandom,buildUniqueNames,conditionFit,horseRating,selectCompetitiveField,buildRace,finishRace,resolveRace,estimateWinProbabilities,priceMorningLine,applyRaceResult,simulateWorldRound,seedWorld,ticketCost,validateTicket,settleTicket};
 });

@@ -133,6 +133,18 @@ test('morning lines use traditional increments and avoid large tied groups',()=>
   assert.ok(prices['line-0']<=prices['line-5']);
 });
 
+test('visible cards match horses into competitive ability bands',()=>{
+  const roster=Array.from({length:200},(_,index)=>({id:`matched-${index}`,speed:4+index%7,stamina:4+(index*3)%7,break:4+(index*5)%7,consistency:4+(index*2)%7,speedFigure:48+index%59,classRating:50+(index*7)%71,earlyPace:35+(index*11)%86,latePace:35+(index*13)%86,weight:110+index%17,workoutPosition:1+index%18,workoutField:24,form:[1+index%8,1+(index*3)%8,1+(index*5)%8],distancePref:['sprint','route','versatile'][index%3],surfacePref:'dirt',style:['FRONT','PRESSER','CLOSER','VOLATILE'][index%4],conditionBias:{fast:index%3,muddy:(index+2)%3}})),seen=new Set();
+  for(let seed=1;seed<=30;seed++){
+    const field=logic.buildRace(roster,conditions,seed).field,ratings=field.map(horse=>horse.rating),odds=field.map(horse=>horse.odds);
+    field.forEach(horse=>seen.add(horse.id));
+    assert.ok(Math.max(...ratings)-Math.min(...ratings)<4);
+    assert.ok(odds.filter(price=>price>=30).length<=1);
+    assert.ok(odds.filter(price=>price<=20).length>=5);
+  }
+  assert.ok(seen.size>50);
+});
+
 test('seeded trip variance permits occasional longshot wins without erasing form',()=>{
   const field=[100,98,96,94,92,90].map((rating,index)=>({id:`seeded-${index}`,rating,consistency:6+index%3,stamina:7,break:7,style:['FRONT','PRESSER','CLOSER'][index%3]})),wins=Array(6).fill(0);
   for(let index=0;index<2000;index++){const winner=logic.resolveRace(field,conditions[0],logic.hashSeed(`distribution-${index}`)).order[0];wins[Number(winner.split('-')[1])]++}
