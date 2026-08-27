@@ -143,18 +143,22 @@ test('wagering window renders projected return and net before purchase',()=>{
 
 test('mobile wagering keeps a live ticket dock and expandable review sheet',()=>{
   const script=fs.readFileSync(require.resolve('../js/game.js'),'utf8'),html=fs.readFileSync(require.resolve('../index.html'),'utf8'),css=fs.readFileSync(require.resolve('../css/styles.css'),'utf8');
-  for(const id of ['ticketPanel','mobileTicketDock','mobileTicketToggle','mobileTicketPick','mobileTicketCost','mobileTicketReturn','ticketBackdrop','closeTicket','mobileQuickControls','mobileStraightTypes','mobileStakeDown','mobileStakeValue','mobileStakeUp','mobilePlaceBet'])assert.match(html,new RegExp(`id="${id}"`));
+  for(const id of ['ticketPanel','mobileTicketDock','mobileTicketToggle','mobileTicketPick','mobileTicketCost','mobileTicketReturn','ticketBackdrop','closeTicket','mobileQuickControls','mobileStraightTypes','mobileMoreBets','mobileExoticTypes','mobileStakeDown','mobileStakeValue','mobileStakeUp','mobilePlaceBet'])assert.match(html,new RegExp(`id="${id}"`));
   for(const step of ['BET TYPE','SELECTION','BASE WAGER'])assert.match(html,new RegExp(`<span>${step}</span>`));
   assert.match(script,/function setTicketSheet\(open\)/);
   assert.match(script,/mobileTicketReturn/);
   assert.match(script,/highestReturn/);
   assert.match(script,/function stepMobileStake\(direction\)/);
+  assert.match(script,/function toggleMobileMore\(\)/);
   assert.match(script,/chooseBetType\(button\.dataset\.mobileBetType,true\)/);
   assert.match(script,/mobilePlaceBet.*placeBet/);
+  assert.match(script,/atb:\{label:'I CALL'/);
+  assert.match(html,/>I CALL<\/button>/);
   assert.match(css,/@media\(max-width:720px\)/);
   assert.match(css,/\.mobile-ticket-dock/);
   assert.match(css,/\.ticket-panel\.mobile-open/);
   assert.match(css,/\.mobile-quick-controls/);
+  assert.match(css,/\.mobile-exotic-types/);
   assert.match(css,/\.mobile-place-bet/);
 });
 

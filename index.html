@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b0906">
   <meta name="description" content="Underground Racing — a fictional-money horse racing strategy game.">
   <title>Underground Racing</title>
-  <link rel="stylesheet" href="css/styles.css?v=0.9.2">
+  <link rel="stylesheet" href="css/styles.css?v=0.9.3">
 </head>
 <body>
   <main class="app-shell">
@@ -71,8 +71,9 @@
         </button>
         <div class="mobile-quick-controls" id="mobileQuickControls" hidden>
           <div class="mobile-straight-types" id="mobileStraightTypes" role="group" aria-label="Quick wager type">
-            <button type="button" data-mobile-bet-type="win">WIN</button><button type="button" data-mobile-bet-type="place">PLACE</button><button type="button" data-mobile-bet-type="show">SHOW</button>
+            <button type="button" data-mobile-bet-type="win">WIN</button><button type="button" data-mobile-bet-type="place">PLACE</button><button type="button" data-mobile-bet-type="show">SHOW</button><button id="mobileMoreBets" type="button" aria-controls="mobileExoticTypes" aria-expanded="false">MORE BETS</button>
           </div>
+          <div class="mobile-exotic-types" id="mobileExoticTypes" role="group" aria-label="More wager types" hidden><button type="button" data-mobile-bet-type="atb">I CALL</button><button type="button" data-mobile-bet-type="exacta">EXACTA</button><button type="button" data-mobile-bet-type="exactaBox">EXACTA BOX</button></div>
           <div class="mobile-wager-stepper">
             <button id="mobileStakeDown" type="button" aria-label="Decrease wager">−</button><b id="mobileStakeValue">$2 WAGER</b><button id="mobileStakeUp" type="button" aria-label="Increase wager">+</button>
           </div>
@@ -97,7 +98,7 @@
 
   <dialog id="guideDialog">
     <div class="guide-head"><div><small>WINDOW BASICS</small><h2>HOW TO BUILD A TICKET</h2></div><button id="closeGuide" type="button" aria-label="Close guide">×</button></div>
-    <ol><li><b>Pick the wager.</b> Win means first; Place covers first or second; Show covers the top three.</li><li><b>Pick the horse.</b> Exacta requires two horses in exact finishing order. Exacta Box covers either order.</li><li><b>Set the base wager.</b> Across the Board creates three bets. Exacta Box creates two combinations, so total cost multiplies.</li><li><b>Check the ticket.</b> The window always shows track, race, wager, selections, and total before you commit.</li></ol>
+    <ol><li><b>Pick the wager.</b> Win means first; Place covers first or second; Show covers the top three.</li><li><b>Pick the horse.</b> Exacta requires two horses in exact finishing order. Exacta Box covers either order.</li><li><b>Set the base wager.</b> I Call creates three bets—Win, Place, and Show. Exacta Box creates two combinations, so total cost multiplies.</li><li><b>Check the ticket.</b> The window always shows track, race, wager, selections, and total before you commit.</li></ol>
     <p>Trifecta and multi-race tickets are coming later. Start simple, read the form, and protect the wallet.</p>
   </dialog>
 
@@ -108,7 +109,7 @@
     <div class="result-modal-actions"><button id="reviewFinish" type="button">REVIEW FINISH</button><button id="modalNextRace" type="button">NEXT RACE</button></div>
   </dialog>
 
-  <script src="js/race-logic.js?v=0.9.2"></script>
-  <script src="js/game.js?v=0.9.2"></script>
+  <script src="js/race-logic.js?v=0.9.3"></script>
+  <script src="js/game.js?v=0.9.3"></script>
 </body>
 </html>

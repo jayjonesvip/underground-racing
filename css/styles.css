@@ -18,7 +18,7 @@ dialog{width:min(calc(100% - 24px),520px);padding:0;border:1px solid #8d6a31;bor
 
 .ticket-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}.ticket-close,.ticket-step,.mobile-ticket-dock,.mobile-ticket-backdrop{display:none}
 @media(max-width:720px){
-  .race-room{padding-bottom:92px}.race-room:has(.mobile-ticket-dock.expanded){padding-bottom:154px}
+  .race-room{padding-bottom:92px}.race-room:has(.mobile-ticket-dock.expanded){padding-bottom:154px}.race-room:has(#mobileExoticTypes:not([hidden])){padding-bottom:198px}
   .ticket-panel{position:fixed;z-index:72;right:8px;bottom:8px;left:8px;top:auto;max-height:min(84dvh,690px);overflow:auto;border-color:#8a682f;border-radius:14px;background:#0d0a06;box-shadow:0 -12px 55px #000e;pointer-events:none;transform:translateY(calc(100% + 18px));transition:transform .22s ease-out}
   .ticket-panel.mobile-open{pointer-events:auto;transform:translateY(0)}
   .ticket-heading{position:sticky;z-index:2;top:0;border-bottom-style:solid;background:#211806f5;backdrop-filter:blur(8px)}
@@ -44,9 +44,11 @@ dialog{width:min(calc(100% - 24px),520px);padding:0;border:1px solid #8d6a31;bor
   .mobile-ticket-dock.ready strong{border-color:#dfa946;background:linear-gradient(#c27e1d,#71400b);color:#fff6dd}
   .mobile-quick-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(132px,1.15fr);gap:5px;margin-top:5px;padding-top:5px;border-top:1px solid #49391f}
   .mobile-quick-controls[hidden]{display:none}
-  .mobile-straight-types{display:grid;grid-column:1/-1;grid-template-columns:repeat(3,1fr);gap:4px}
-  .mobile-straight-types button,.mobile-wager-stepper button{min-height:30px;border:1px solid #4d402c;border-radius:6px;background:#100d08;color:#9f927c;font-size:8px;font-weight:1000}
-  .mobile-straight-types button.active{border-color:#c99a43;background:#5b3f12;color:#fff0c8}
+  .mobile-straight-types{display:grid;grid-column:1/-1;grid-template-columns:repeat(4,1fr);gap:4px}
+  .mobile-straight-types button,.mobile-exotic-types button,.mobile-wager-stepper button{min-height:30px;border:1px solid #4d402c;border-radius:6px;background:#100d08;color:#9f927c;font-size:8px;font-weight:1000}
+  .mobile-straight-types button.active,.mobile-exotic-types button.active{border-color:#c99a43;background:#5b3f12;color:#fff0c8}
+  .mobile-exotic-types{display:grid;grid-column:1/-1;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border:1px solid #5b482a;border-radius:7px;background:#1b1409}
+  .mobile-exotic-types[hidden]{display:none}
   .mobile-wager-stepper{display:grid;grid-template-columns:32px minmax(0,1fr) 32px;gap:3px;align-items:center}
   .mobile-wager-stepper b{display:grid;place-items:center;height:30px;border:1px solid #4d402c;border-radius:6px;background:#0a0805;color:#f0d59a;font-size:8px;white-space:nowrap}
   .mobile-place-bet{min-height:30px;border:1px solid #dfa946;border-radius:6px;background:linear-gradient(#c27e1d,#71400b);color:#fff6dd;font-size:8px;font-weight:1000;letter-spacing:.45px}
