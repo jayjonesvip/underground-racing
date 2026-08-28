@@ -39,9 +39,14 @@
   function setCharacterMood(mood='neutral'){const character=selectedCharacter();if(!character)return;const asset=mood==='happy'?character.happyAsset:mood==='mad'?character.madAsset:character.asset,description=mood==='happy'?'celebrating a winning ticket':mood==='mad'?'frustrated after a losing ticket':character.tag.toLowerCase();$('#playerAvatar').src=asset;$('#playerAvatar').alt=`${character.name}, ${description}`;const resultAvatar=$('#resultAvatar');if(resultAvatar){resultAvatar.src=asset;resultAvatar.alt=`${character.name}, ${description}`}}
   function renderStreakBadge(){const badge=$('#streakBadge');badge.hidden=state.winStreak<2;$('#streakCount').textContent=state.winStreak}
   function snapBetSlip(){const targets=[$('#ticketPicks'),$('#mobileTicketDock')];targets.forEach(target=>target.classList.remove('bet-snap'));void targets[0].offsetWidth;targets.forEach(target=>target.classList.add('bet-snap'));setTimeout(()=>targets.forEach(target=>target.classList.remove('bet-snap')),200)}
-  function animateWallet(from,to){if(walletFrame)cancelAnimationFrame(walletFrame);const display=$('#walletValue'),started=performance.now(),duration=700;display.classList.add('odometer');const frame=now=>{const progress=Math.min(1,(now-started)/duration),eased=1-Math.pow(1-progress,3);display.textContent=money(from+(to-from)*eased);if(progress<1){walletFrame=requestAnimationFrame(frame);return}walletFrame=null;display.textContent=money(to);display.classList.remove('odometer')};walletFrame=requestAnimationFrame(frame)}
+  function pulseWallet(kind){const display=$('#walletValue');display.classList.remove('wallet-up','wallet-down');void display.offsetWidth;display.classList.add(kind==='up'?'wallet-up':'wallet-down');setTimeout(()=>display.classList.remove('wallet-up','wallet-down'),700)}
+  function animateWallet(from,to){if(walletFrame)cancelAnimationFrame(walletFrame);const display=$('#walletValue'),started=performance.now(),duration=700;display.classList.add('odometer');pulseWallet(to>=from?'up':'down');const frame=now=>{const progress=Math.min(1,(now-started)/duration),eased=1-Math.pow(1-progress,3);display.textContent=money(from+(to-from)*eased);if(progress<1){walletFrame=requestAnimationFrame(frame);return}walletFrame=null;display.textContent=money(to);display.classList.remove('odometer')};walletFrame=requestAnimationFrame(frame)}
   function payoutOdds(ticket,result){return ticket.cost>0?Math.max(0,result.payout/ticket.cost-1):0}
   function winningCopy(ticket,result){const odds=payoutOdds(ticket,result),bracket=odds>=20?'longshot':odds>4?'midrange':'favorite',pool=winCopy[bracket],index=LOGIC.hashSeed(`${race.seed}|${ticket.type}|${result.payout}|copy`)%pool.length;return `${pool[index]} ${money(result.payout)} RETURN.`}
+  function nearMiss(ticket,resolution){if(!ticket||!resolution||Number(resolution.finishMargin)>0.75)return false;const runnerUp=resolution.order[1];return Boolean(runnerUp&&ticket.picks.includes(runnerUp))}
+  function settlementCopy(ticket,result,resolution){if(result.won)return `TICKET CASHES · ${money(result.payout)} RETURN`;if(nearMiss(ticket,resolution))return `SECOND BY A NECK · ${money(ticket.cost)} LOST`;return `TICKET MISSES · ${money(ticket.cost)} LOST`}
+  function missCopy(ticket,result,resolution,winner){if(nearMiss(ticket,resolution))return `SECOND BY A NECK · ${money(ticket.cost)} LOST`;return `${money(ticket.cost)} LOST · ${winner.name} WINS`}
+  function streakCopy(streak){return streak>=5?'ON A TEAR · 5 IN A ROW':streak===3?'HEATING UP · 3 IN A ROW':streak===2?'2 IN A ROW':''}
   function triggerBigWin(){const shell=$('.app-shell'),dialog=$('#resultDialog'),flash=$('#winFlash');shell.classList.remove('big-win-shake');dialog.classList.remove('big-win-shake');flash.classList.remove('active');void shell.offsetWidth;shell.classList.add('big-win-shake');dialog.classList.add('big-win-shake');flash.classList.add('active');setTimeout(()=>{shell.classList.remove('big-win-shake');dialog.classList.remove('big-win-shake');flash.classList.remove('active')},350)}
   function revealResult(resolution,bigWin,won){const dialog=$('#resultDialog'),show=()=>{if(!dialog.open)dialog.showModal();outcomeSound(won);if(bigWin)triggerBigWin()};if(Number(resolution.finishMargin)<=.75){const banner=$('#photoFinishBanner');banner.hidden=false;if(photoTimer)clearTimeout(photoTimer);photoTimer=setTimeout(()=>{photoTimer=null;banner.hidden=true;show()},850)}else show()}
   function ensureWorld(){if(state.roster.length===200)return;state.roster=LOGIC.seedWorld(buildHorseRoster(state.seed),conditions,LOGIC.hashSeed(`${state.seed}|history`),5);state.worldDay=0;state.activeRace=null}
@@ -95,7 +100,7 @@
     $$('[data-mobile-bet-type]').forEach(button=>button.classList.toggle('active',button.dataset.mobileBetType===betType));
     $$('[data-stake]').forEach(button=>button.classList.toggle('active',Number(button.dataset.stake)===stake));
   }
-  function renderHistory(){renderStreakBadge();const list=$('#historyList');list.innerHTML=state.history.length?state.history.map(item=>`<div class="history-row"><span>RACE ${item.race}</span><span>${item.type} · ${item.picks}</span><b class="${item.profit>=0?'win':'loss'}">${item.profit>=0?'+':''}${money(item.profit)}</b></div>`).join(''):'<div class="empty">NO TICKETS YET. THE WINDOW IS OPEN.</div>'}
+  function renderHistory(fresh=false){renderStreakBadge();const list=$('#historyList');list.innerHTML=state.history.length?state.history.map((item,index)=>`<div class="history-row ${index===0&&fresh?'fresh':''}"><span>RACE ${item.race}</span><span>${item.type} · ${item.picks}</span><b class="${item.profit>=0?'win':'loss'}">${item.profit>=0?'+':''}${money(item.profit)}</b></div>`).join(''):'<div class="empty">NO TICKETS YET. THE WINDOW IS OPEN.</div>'}
   function renderAll(){const condition=race.condition;document.documentElement.style.setProperty('--condition',condition.color);document.documentElement.style.setProperty('--track',condition.track);$('#walletValue').textContent=money(state.wallet);$('#raceNumber').textContent=state.raceNumber;$('#ticketRace').textContent=state.raceNumber;$('#conditionBadge').innerHTML=`<small>${condition.distance} · CLASS ${condition.raceClass}</small><b>${condition.name} DIRT</b><span>${condition.pace==='speed'?'SPEED-FAVORING':condition.pace==='stamina'?'STAMINA-FAVORING':'BALANCED'}</span>`;$('#conditionNote').textContent=`${condition.note} Last 5 and career records come from completed races across the 200-horse circuit.`;renderSoundToggle();renderBetTypes();renderHorses();renderTicket();renderHistory()}
   function finishTime(position){return 8000+Math.max(0,position)*350}
   function progressAtTime(position,elapsed){return 4+92*Math.min(1,Math.max(0,elapsed)/finishTime(position))}
@@ -119,21 +124,21 @@
     state.roster=LOGIC.simulateWorldRound(state.roster,conditions,LOGIC.hashSeed(`${state.seed}|world-day|${worldDay}`),{excludeIds:order,raceIdPrefix:`D${worldDay}`});
     state.worldDay=worldDay;
     save();
-    if(result.payout>0)animateWallet(walletBeforePayout,state.wallet);else $('#walletValue').textContent=money(state.wallet);
-    const resultMarkup=order.map((id,index)=>{const horse=race.field.find(item=>item.id===id);return `<div class="result-row ${ticket.picks.includes(id)?'ticket-horse':''}"><b>${index+1}</b><span>#${horse.program} ${horse.name}</span><small>${oddsText(horse.odds)}</small></div>`}).join('')+`<div class="race-reason"><b>WHY ${winner.name.toUpperCase()} WON</b><span>${resolution.winnerStory.toUpperCase()} · ${resolution.paceScenario.toUpperCase()} PACE</span></div><div class="settlement ${result.won?'win':'loss'}">${result.won?`TICKET CASHES · ${money(result.payout)} RETURN`:`TICKET MISSES · ${money(ticket.cost)} LOST`}</div>`;
+    if(result.payout>0)animateWallet(walletBeforePayout,state.wallet);else{$('#walletValue').textContent=money(state.wallet);pulseWallet('down')}
+    const resultMarkup=order.map((id,index)=>{const horse=race.field.find(item=>item.id===id);return `<div class="result-row ${ticket.picks.includes(id)?'ticket-horse':''}"><b>${index+1}</b><span>#${horse.program} ${horse.name}</span><small>${oddsText(horse.odds)}</small></div>`}).join('')+`<div class="race-reason"><b>WHY ${winner.name.toUpperCase()} WON</b><span>${resolution.winnerStory.toUpperCase()} · ${resolution.paceScenario.toUpperCase()} PACE</span></div><div class="settlement ${result.won?'win':'loss'}">${settlementCopy(ticket,result,resolution)}</div>`;
     $('#resultBoard').innerHTML=resultMarkup;
     $('#resultBoard').hidden=false;
     $('#nextRace').hidden=false;
     $('#raceCall').textContent=`${winner.name.toUpperCase()} WINS`;
     $('#resultModalTitle').textContent=result.won?'YOU WIN':'TICKET MISSES';
-    $('#resultModalSummary').textContent=result.won?winningCopy(ticket,result):`${money(ticket.cost)} LOST · ${winner.name} WINS`;
+    $('#resultModalSummary').textContent=result.won?winningCopy(ticket,result):missCopy(ticket,result,resolution,winner);
     $('#resultModalHead').className=`result-modal-head ${result.won?'win':'loss'}`;
     $('#resultModalBody').innerHTML=resultMarkup;
-    const bestToast=$('#personalBestToast');bestToast.hidden=!newPersonalBest;bestToast.textContent=newPersonalBest?`NEW PERSONAL BEST · ${money(result.payout)}`:'';
+    const bestToast=$('#personalBestToast');const streakLine=streakCopy(state.winStreak);bestToast.hidden=!(newPersonalBest||streakLine);bestToast.textContent=newPersonalBest?`NEW PERSONAL BEST · ${money(result.payout)}`:streakLine;bestToast.classList.toggle('streak-toast',!newPersonalBest&&Boolean(streakLine));
     racing=false;
     setTicketSheet(false);
     $('#mobileTicketDock').hidden=true;
-    renderHistory();
+    renderHistory(true);
     revealResult(resolution,bigWin,result.won);
   }
   function nextRace(){stopRaceMotion();stopRaceAudio();setTicketSheet(false);const dialog=$('#resultDialog');if(dialog.open)dialog.close();state.raceNumber++;state.activeRace=null;state.raceCompleted=false;picks=[];betType='win';stake=2;race=null;ensureRace();$('#raceStage').hidden=true;renderAll();window.scrollTo({top:0,behavior:'smooth'})}
